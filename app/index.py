@@ -113,7 +113,7 @@ def main():
     logger.info(
         f"Saving the vector store of size {len(vector_store.index_to_docstore_id)} locally ..."
     )
-    vector_store.save_local("..res/forum_index")
+    vector_store.save_local("../res/forum_index")
 
 
 if __name__ == "__main__":
