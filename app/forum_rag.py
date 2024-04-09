@@ -81,47 +81,47 @@ class ForumRAG:
             embedding_model_wrapper,
             allow_dangerous_deserialization=True,
         )
-        openai_api_key = os.environ.get("OPENAI_API_KEY")
+        # openai_api_key = os.environ.get("OPENAI_API_KEY")
         anthropic_api_key = os.environ.get("ANTHROPIC_API_KEY")
 
-        gpt4_preview = ChatOpenAI(
-            model_name="gpt-4-1106-preview",
-            openai_api_key=openai_api_key,
-            max_tokens=self.MAX_TOKENS,
-        )
-        gpt4 = ChatOpenAI(
-            model_name="gpt-4",
-            openai_api_key=openai_api_key,
-            max_tokens=self.MAX_TOKENS,
-        )
-        gpt3_5 = ChatOpenAI(
-            model_name="gpt-3.5-turbo-0125",
-            openai_api_key=openai_api_key,
-            max_tokens=self.MAX_TOKENS,
-        )
+        # gpt4_preview = ChatOpenAI(
+        #     model_name="gpt-4-1106-preview",
+        #     openai_api_key=openai_api_key,
+        #     max_tokens=self.MAX_TOKENS,
+        # )
+        # gpt4 = ChatOpenAI(
+        #     model_name="gpt-4",
+        #     openai_api_key=openai_api_key,
+        #     max_tokens=self.MAX_TOKENS,
+        # )
+        # gpt3_5 = ChatOpenAI(
+        #     model_name="gpt-3.5-turbo-0125",
+        #     openai_api_key=openai_api_key,
+        #     max_tokens=self.MAX_TOKENS,
+        # )
 
-        opus = ChatAnthropic(
-            model="claude-3-opus-20240229",
-            anthropic_api_key=anthropic_api_key,
-            max_tokens=self.MAX_TOKENS,
-        )
-        sonnet = ChatAnthropic(
-            model="claude-3-sonnet-20240229",
-            anthropic_api_key=anthropic_api_key,
-            max_tokens=self.MAX_TOKENS,
-        )
+        # opus = ChatAnthropic(
+        #     model="claude-3-opus-20240229",
+        #     anthropic_api_key=anthropic_api_key,
+        #     max_tokens=self.MAX_TOKENS,
+        # )
+        # sonnet = ChatAnthropic(
+        #     model="claude-3-sonnet-20240229",
+        #     anthropic_api_key=anthropic_api_key,
+        #     max_tokens=self.MAX_TOKENS,
+        # )
         haiku = ChatAnthropic(
             model="claude-3-haiku-20240307",
             anthropic_api_key=anthropic_api_key,
             max_tokens=self.MAX_TOKENS,
         )
 
-        rag_opus = self.__get_rag_chain(vector_store, opus)
-        rag_sonnet = self.__get_rag_chain(vector_store, sonnet)
+        # rag_opus = self.__get_rag_chain(vector_store, opus)
+        # rag_sonnet = self.__get_rag_chain(vector_store, sonnet)
         rag_haiku = self.__get_rag_chain(vector_store, haiku)
-        rag_gpt4_preview = self.__get_rag_chain(vector_store, gpt4_preview)
-        rag_gpt4 = self.__get_rag_chain(vector_store, gpt4)
-        rag_gpt3_5 = self.__get_rag_chain(vector_store, gpt3_5)
+        # rag_gpt4_preview = self.__get_rag_chain(vector_store, gpt4_preview)
+        # rag_gpt4 = self.__get_rag_chain(vector_store, gpt4)
+        # rag_gpt3_5 = self.__get_rag_chain(vector_store, gpt3_5)
 
         self.rag = rag_haiku
 
