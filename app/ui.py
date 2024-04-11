@@ -1,3 +1,4 @@
+import pathlib
 import logging
 import streamlit as st
 from forum_rag import ForumRAG
@@ -22,6 +23,8 @@ def generate_response(query_text):
 
 
 def forum_topics():
+    files = [f for f in pathlib.Path().iterdir()]
+    print(files)
     # Page title
     st.set_page_config(page_title="👶🏼 Kinder Forum")
     st.title("👶🏼 Kinder Themen 👶🏼")
