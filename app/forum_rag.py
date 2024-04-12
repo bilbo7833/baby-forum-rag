@@ -146,7 +146,7 @@ class ForumRAG:
         # rag_gpt4 = self.__get_rag_chain(vector_store, gpt4)
         # rag_gpt3_5 = self.__get_rag_chain(vector_store, gpt3_5)
 
-        self.rag = rag_opus
+        self.rag = rag_haiku
 
     def input(self, input_string):
         answer = self.rag.invoke(input_string)
