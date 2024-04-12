@@ -22,9 +22,17 @@ def generate_response(query_text):
         st.exception(e)
 
 
+def print_files_and_folders(path):
+    for root, dirs, files in os.walk(path):
+        level = root.replace(path, "").count(os.sep)
+        indent = " " * 4 * (level)
+        print("{}{}/".format(indent, os.path.basename(root)))
+        subindent = " " * 4 * (level + 1)
+        for f in files:
+            print("{}{}".format(subindent, f))
+
+
 def forum_topics():
-    files = [f for f in pathlib.Path().iterdir()]
-    print(files)
     # Page title
     st.set_page_config(page_title="👶🏼 Kinder Forum")
     st.title("👶🏼 Kinder Themen 👶🏼")
@@ -34,6 +42,7 @@ def forum_topics():
         password = st.text_input("Key", type="password")
         submitted = st.form_submit_button("Suche")
     if submitted and (password == "schnurri2023"):
+        print_files_and_folders(".")
         with st.spinner("Suchen..."):
             response = generate_response(query_text)
             result = response
