@@ -20,7 +20,7 @@ def format_context(docs):
 class ForumRAG:
 
     EMBEDDING_MODEL = "aari1995/German_Semantic_STS_V2"
-    INDEX_PATH = "app/forum_index"
+    INDEX_PATH = "res/forum_index"
     MAX_TOKENS = 4000
     PROMPT_TEMPLATE = """Du bist ein hilfreicher Assistent für junge Eltern, der Informationen aus Foren sammelt, um Eltern bei der Beantwortung von Fragen über ihre Kinder zu helfen.
 
