@@ -23,14 +23,16 @@ def generate_response(query_text):
 
 
 def print_files_and_folders(path):
-    print("Printing folder structure")
+    logger.info("Printing folder structure")
+    output = ""
     for root, dirs, files in os.walk(path):
         level = root.replace(path, "").count(os.sep)
         indent = " " * 4 * (level)
-        st.write("{}{}/".format(indent, os.path.basename(root)))
+        output += "{}{}/\n".format(indent, os.path.basename(root))
         subindent = " " * 4 * (level + 1)
         for f in files:
-            st.write("{}{}".format(subindent, f))
+            output += "{}{}\n".format(subindent, f)
+    st.code(output)
 
 
 def forum_topics():
