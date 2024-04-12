@@ -7,32 +7,19 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-@st.cache_resource
+@st.cache_resource(show_spinner=False)
 def rag():
     return ForumRAG()
 
 
-@st.cache_data
+@st.cache_data(show_spinner=False)
 def generate_response(query_text):
     try:
         output = rag().input(query_text)
-        logger.info(f"Output: {output}")
+        # logger.info(f"Output: {output}")
         return output
     except Exception as e:
         st.exception(e)
-
-
-def print_files_and_folders(path):
-    logger.info("Printing folder structure")
-    output = ""
-    for root, dirs, files in os.walk(path):
-        level = root.replace(path, "").count(os.sep)
-        indent = " " * 4 * (level)
-        output += "{}{}/\n".format(indent, os.path.basename(root))
-        subindent = " " * 4 * (level + 1)
-        for f in files:
-            output += "{}{}\n".format(subindent, f)
-    st.code(output)
 
 
 def forum_topics():
@@ -45,7 +32,6 @@ def forum_topics():
         password = st.text_input("Key", type="password")
         submitted = st.form_submit_button("Suche")
     if submitted and (password == "schnurri2023"):
-        print_files_and_folders(".")
         with st.spinner("Suchen..."):
             response = generate_response(query_text)
             result = response

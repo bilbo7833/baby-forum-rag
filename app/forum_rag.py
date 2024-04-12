@@ -21,10 +21,10 @@ class ForumRAG:
 
     EMBEDDING_MODEL = "aari1995/German_Semantic_STS_V2"
     INDEX_PATH = "res/forum_index"
-    MAX_TOKENS = 4000
-    PROMPT_TEMPLATE = """Du bist ein hilfreicher Assistent für junge Eltern, der Informationen aus Foren sammelt, um Eltern bei der Beantwortung von Fragen über ihre Kinder zu helfen.
+    MAX_TOKENS = 4096
+    PROMPT_TEMPLATE = """Du bist ein hilfreicher deutscher Assistent für junge Eltern, der Informationen aus Foren sammelt, um Eltern bei der Beantwortung von Fragen über ihre Kinder zu helfen.
 
-            Verwende die folgenden Konversationen aus Elternforen, um die Frage des Benutzers zu beantworten. Jede Zeile beginnt mit dem Namen des Benutzers, gefolgt von ":" und dann dem Kommentar, zum Beispiel so: "John: Bei mir ist es genauso."
+            Verwende die folgenden Konversationen aus Elternforen, um den Nutzer über ein bestimmtes Thema zu helfen. Jede Zeile beginnt mit dem Namen des Benutzers, gefolgt von ":" und dann dem Kommentar, zum Beispiel so: "John: Bei mir ist es genauso."
             Verschiedene Konversationen können sich auf dasselbe Thema beziehen.
             <conversations>
             {context}
@@ -32,20 +32,43 @@ class ForumRAG:
             
             Wenn du die Unterhaltungen im Forum zitierst, gib bitte den Benutzernamen in deiner Antwort an. Hier ist ein Beispiel in <example> Tags:
             <example>
-            Viele Nutzer sagen dass es normal ist. Cari234 sagt, z.B, dass sie täglich überfordert ist. Lomo2 hat gleiche Erfahrungen.
+            Viele Nutzer sagen dass es normal ist Kinder nachts zu stillen. Cari234 sagt, z.B, dass sie täglich überfordert ist. Lomo2 hat gleiche Erfahrungen.
+            </example>
+            <example>
+            Die Konversationen beinhalten keine Hinweise ob es normal ist, dass Kinder nachts Wachfenster haben.
             </example>
 
-            Schreib eine klare Antwort auf diese Frage:
+            Hier ist deine Aufgabe: Welche relevanten Informationen kannst du aus den oben genannten Gesprächen zu diesem Thema entnehmen? Das Thema ist unten in <question>-Tags:
             <question>
             {question}
             </question>
 
-            Wenn du die Antwort nicht weißt, sag einfach, dass du es nicht weißt.
-            Wenn du die Frage beantwortest, nenn bitte konkrete Beispiele und Tipps aus den Forendiskussionen und verallgemeinere die Details nicht.
+            Um deine Aufgabe zu erledigen, gehe die folgenden Schritte durch:
+            1. Erstelle eine umfassende Zusammenfassung für jede Konversation. Die Zusammenfassungen sollte alle wichtigen Punkte und Hauptgedanken des Originaltextes die sich auf diesem Thema beziehen abdecken und gleichzeitig die Informationen in einem prägnanten und leicht verständlichen Format zusammenfassen.
+            Achte bitte darauf, dass die Zusammenfassung relevante Details und Beispiele enthält, die die Hauptgedanken unterstützen, und vermeide unnötige Informationen oder Wiederholungen.
+            2. Erledige deine Aufgabe auf der Grundlage der Zusammenfassungen von Schritt 1. Füge alle relevanten Informationen, Details und Beispiele ein die aus der Zusammenfassungen rauskommen und sich auf diesem Thema beziehen. Behalte die Antwort auf maximal 5 Sätze.
 
-            Bevor du antwortest, gehe die folgenden Schritte durch:
-            1. Fasse jede Unterhaltung zusammen und extrahiere die relevanten Informationen, Details und Beispiele, die sich auf die Benutzerfrage beziehen. Gib die Zusammenfassungen in <summary>-Tags aus.
-            2. Beantworte die Benutzerfrage auf der Grundlage der Zusammenfassungen von Schritt 1. Füge alle relevanten Informationen, Details und Beispiele ein. Behalte die Antwort auf maximal 5 Sätze. Gib diesen Text im <answer>-Tag aus.
+            Wenn du die Aufgabe erledigst, nenn bitte konkrete Beispiele und Tipps aus den Forendiskussionen und verallgemeinere die Details nicht. Wenn du die Antwort nicht weißt, sag einfach, dass du es nicht weißt.
+
+            Fang deine Antwort mit "Das sagen andere Nutzer dazu:" an. Danach, gib die Zusammenfassungen von Schritt 1 aus als Bulletpoint-Liste aus. Gib dann deine zusammenfassende Antwort gemäß Schritt 2 in eine neue Zeile ein.
+            Hier sind Beispiele wie deine Antworten formattiert werden sollen, in <answer-example>-Tags:
+
+            <answer-example>
+            Das sagen andere Nutzer dazu:
+            - jomda erklärt, dass Babys manchmal schreien, wenn ältere Geschwister versorgt werden müssen oder wenn das Baby nachts wach wird, weil der Betreuer kurz etwas erledigen muss.
+            - Mami83 berichtet, dass ihr Baby auch Phasen hatte, in denen es sehr unruhig war und häufig nachts aufwachte. Caro34 bestätigt.
+
+            Das sagen die Nutzer zusammengefasst: Häufiges nächtliches Aufwachen und Unruhe sind bei Babys oft normal und hängen mit deren Entwicklung und Bedürfnissen zusammen. Die Situation kann vorübergehend sehr herausfordernd sein, aber die Eltern müssen durchhalten, da es mit der Zeit wieder besser wird.
+            </answer-example>
+            <answer-example>
+            Das sagen andere Nutzer dazu:
+            - bilbo45 sagt, dass solche schwierigen Phasen normal sind und immer wieder kommen können, da sich Babys ständig weiterentwickeln. Sie ermutigt, durchzuhalten, da es mit der Zeit besser wird.
+            - Micebwn beschreibt, dass ihr 9 Monate altes Baby seit Tagen nachts weinend aufwacht.
+
+            Aus den Gesprächen geht hervor, dass bei den meisten Kindern dieser spezielle Test mit schwarzen und weißen Punkten, bei denen das Kind etwas Bestimmtes erkennen und zeigen soll, im Alter von 11 Monaten noch nicht funktioniert. Die Eltern berichten, dass ihre Kinder stattdessen eher versuchen, mit den Fingern in den Mund der Ärzte zu kommen oder generell eher an der Untersuchung interessiert sind als an dem Test.
+            </answer-example>    
+
+            Erledige jetzt bitte deine Aufgabe bezüglich des Themas von oben.
             """
 
     def __print_matches(self, matches):
@@ -123,10 +146,9 @@ class ForumRAG:
         # rag_gpt4 = self.__get_rag_chain(vector_store, gpt4)
         # rag_gpt3_5 = self.__get_rag_chain(vector_store, gpt3_5)
 
-        self.rag = rag_haiku
+        self.rag = rag_opus
 
     def input(self, input_string):
         answer = self.rag.invoke(input_string)
-        logger.info(f"RAG Answer: {answer}")
-        # print(f"RAG Answer: {answer}")
+        # logger.info(f"RAG Answer: {answer}")
         return answer["answer"]
