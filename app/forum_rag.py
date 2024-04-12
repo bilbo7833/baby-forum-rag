@@ -45,7 +45,7 @@ class ForumRAG:
 
             Um deine Aufgabe zu erledigen, gehe die folgenden Schritte durch:
             1. Erstelle eine umfassende Zusammenfassung für jede Konversation. Die Zusammenfassungen sollte alle wichtigen Punkte und Hauptgedanken des Originaltextes die sich auf diesem Thema beziehen abdecken und gleichzeitig die Informationen in einem prägnanten und leicht verständlichen Format zusammenfassen.
-            Achte bitte darauf, dass die Zusammenfassung relevante Details und Beispiele enthält, die die Hauptgedanken unterstützen, und vermeide unnötige Informationen oder Wiederholungen.
+            Achte bitte darauf, dass die Zusammenfassung die Usernamen, relevante Details und Beispiele enthält, die die Hauptgedanken unterstützen, und vermeide unnötige Informationen oder Wiederholungen.
             2. Erledige deine Aufgabe auf der Grundlage der Zusammenfassungen von Schritt 1. Füge alle relevanten Informationen, Details und Beispiele ein die aus der Zusammenfassungen rauskommen und sich auf diesem Thema beziehen. Behalte die Antwort auf maximal 5 Sätze.
 
             Wenn du die Aufgabe erledigst, nenn bitte konkrete Beispiele und Tipps aus den Forendiskussionen und verallgemeinere die Details nicht. Wenn du die Antwort nicht weißt, sag einfach, dass du es nicht weißt.

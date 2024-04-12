@@ -31,10 +31,13 @@ def forum_topics():
         query_text = st.text_input("Worum geht es?", placeholder="Baby schreit nachts.")
         password = st.text_input("Key", type="password")
         submitted = st.form_submit_button("Suche")
-    if submitted and (password == "schnurri2023"):
-        with st.spinner("Suchen..."):
-            response = generate_response(query_text)
-            result = response
+    if submitted:
+        if password == "schnurri2023":
+            with st.spinner("Suchen..."):
+                response = generate_response(query_text)
+                result = response
+        else:
+            st.error("Falscher Key", icon="🚨")
     if result != "":
         st.info(response)
 
