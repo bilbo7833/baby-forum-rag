@@ -1,4 +1,4 @@
-import pathlib
+import os
 import logging
 import streamlit as st
 from forum_rag import ForumRAG
