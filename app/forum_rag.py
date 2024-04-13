@@ -14,7 +14,13 @@ logger = logging.getLogger(__name__)
 
 # TODO: Wrap documents in <conversation> tags
 def format_context(docs):
-    return "\n\n".join(doc.page_content for doc in docs)
+    context = (
+        "<conversation>"
+        + "</conversation>\n\n<conversation>".join(doc.page_content for doc in docs)
+        + "</conversation>"
+    )
+    logger.info(context)
+    return context
 
 
 class ForumRAG:
@@ -24,7 +30,7 @@ class ForumRAG:
     MAX_TOKENS = 4096
     PROMPT_TEMPLATE = """Du bist ein hilfreicher deutscher Assistent für junge Eltern, der Informationen aus Foren sammelt, um Eltern bei der Beantwortung von Fragen über ihre Kinder zu helfen.
 
-            Verwende die folgenden Konversationen aus Elternforen, um den Nutzer über ein bestimmtes Thema zu helfen. Jede Zeile beginnt mit dem Namen des Benutzers, gefolgt von ":" und dann dem Kommentar, zum Beispiel so: "John: Bei mir ist es genauso."
+            Verwende die folgenden Konversationen aus Elternforen, um den Nutzer über ein bestimmtes Thema zu helfen. Jede Konversation ist in einem <conversation>-Tag enthalten. Jede Zeile beginnt mit dem Namen des Benutzers, gefolgt von ":" und dann dem Kommentar, zum Beispiel so: "John: Bei mir ist es genauso."
             Verschiedene Konversationen können sich auf dasselbe Thema beziehen.
             <conversations>
             {context}
@@ -44,7 +50,7 @@ class ForumRAG:
             </question>
 
             Um deine Aufgabe zu erledigen, gehe die folgenden Schritte durch:
-            1. Erstelle eine umfassende Zusammenfassung für jede Konversation. Die Zusammenfassungen sollte alle wichtigen Punkte und Hauptgedanken des Originaltextes die sich auf diesem Thema beziehen abdecken und gleichzeitig die Informationen in einem prägnanten und leicht verständlichen Format zusammenfassen.
+            1. Erstelle eine umfassende Zusammenfassung für jede Konversation in <conversation> Tags oben. Die Zusammenfassungen sollte alle wichtigen Punkte und Hauptgedanken des Originaltextes die sich auf diesem Aufgabe Thema beziehen abdecken und gleichzeitig die Informationen in einem prägnanten und leicht verständlichen Format zusammenfassen.
             Achte bitte darauf, dass die Zusammenfassung die Usernamen, relevante Details und Beispiele enthält, die die Hauptgedanken unterstützen, und vermeide unnötige Informationen oder Wiederholungen.
             2. Erledige deine Aufgabe auf der Grundlage der Zusammenfassungen von Schritt 1. Füge alle relevanten Informationen, Details und Beispiele ein die aus der Zusammenfassungen rauskommen und sich auf diesem Thema beziehen. Behalte die Antwort auf maximal 5 Sätze.
 
@@ -128,11 +134,11 @@ class ForumRAG:
         #     anthropic_api_key=anthropic_api_key,
         #     max_tokens=self.MAX_TOKENS,
         # )
-        # sonnet = ChatAnthropic(
-        #     model="claude-3-sonnet-20240229",
-        #     anthropic_api_key=anthropic_api_key,
-        #     max_tokens=self.MAX_TOKENS,
-        # )
+        sonnet = ChatAnthropic(
+            model="claude-3-sonnet-20240229",
+            anthropic_api_key=anthropic_api_key,
+            max_tokens=self.MAX_TOKENS,
+        )
         haiku = ChatAnthropic(
             model="claude-3-haiku-20240307",
             anthropic_api_key=anthropic_api_key,
@@ -140,7 +146,7 @@ class ForumRAG:
         )
 
         # rag_opus = self.__get_rag_chain(vector_store, opus)
-        # rag_sonnet = self.__get_rag_chain(vector_store, sonnet)
+        rag_sonnet = self.__get_rag_chain(vector_store, sonnet)
         rag_haiku = self.__get_rag_chain(vector_store, haiku)
         # rag_gpt4_preview = self.__get_rag_chain(vector_store, gpt4_preview)
         # rag_gpt4 = self.__get_rag_chain(vector_store, gpt4)
