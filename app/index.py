@@ -86,7 +86,7 @@ def main():
     with open(FORUM_POSTS, "r", encoding="utf-8") as file:
         data = json.load(file)
     # Reduce the size of the dataframe according to size limitations
-    data = data[0:100]
+    data = data[0:1000]
     # Format the html inside the dictionary and remove trailing whitespaces
     logger.info(f"Preprocessing data: {len(data)} items ...")
     data = preprocess_html(data)
