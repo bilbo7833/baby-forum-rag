@@ -19,7 +19,7 @@ def format_context(docs):
         + "</conversation>\n\n<conversation>".join(doc.page_content for doc in docs)
         + "</conversation>"
     )
-    logger.info(context)
+    # logger.info(context)
     return context
 
 
@@ -55,8 +55,7 @@ class ForumRAG:
             2. Erledige deine Aufgabe auf der Grundlage der Zusammenfassungen von Schritt 1. Füge alle relevanten Informationen, Details und Beispiele ein die aus der Zusammenfassungen rauskommen und sich auf diesem Thema beziehen. Behalte die Antwort auf maximal 5 Sätze.
 
             Wenn du die Aufgabe erledigst, nenn bitte konkrete Beispiele und Tipps aus den Forendiskussionen und verallgemeinere die Details nicht. Wenn du die Antwort nicht weißt, sag einfach, dass du es nicht weißt.
-
-            Fang deine Antwort mit "Das sagen andere Nutzer dazu:" an. Danach, gib die Zusammenfassungen von Schritt 1 aus als Bulletpoint-Liste aus. Gib dann deine zusammenfassende Antwort gemäß Schritt 2 in eine neue Zeile ein.
+            Fang deine Antwort mit "Das sagen andere Nutzer dazu:" an. Danach, gib die Zusammenfassungen von Schritt 1 aus als Bulletpoint-Liste aus. Für jede Konversation soll es ein Bulletpoint geben. Gib dann deine zusammenfassende Antwort gemäß Schritt 2 in eine neue Zeile ein.
             Hier sind Beispiele wie deine Antworten formattiert werden sollen, in <answer-example>-Tags:
 
             <answer-example>
@@ -82,7 +81,7 @@ class ForumRAG:
             print(f"\n\nMatch with similarity {p[1]}:\n{p[0].page_content}")
 
     def __get_rag_chain(self, vectorstore, llm):
-        retriever = vectorstore.as_retriever()
+        retriever = vectorstore.as_retriever(search_kwargs={"k": 8})
         prompt = ChatPromptTemplate.from_template(self.PROMPT_TEMPLATE)
 
         rag_chain = (
