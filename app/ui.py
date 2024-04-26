@@ -34,12 +34,11 @@ def forum_topics():
     if submitted:
         if password == "schnurri2023":
             with st.spinner("Suchen..."):
-                response = generate_response(query_text)
-                result = response
+                result = generate_response(query_text)
         else:
             st.error("Falscher Key", icon="🚨")
     if result != "":
-        st.info(response)
+        st.info(result)
 
 
 if __name__ == "__main__":
