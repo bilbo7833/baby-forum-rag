@@ -14,6 +14,7 @@ from llama_index.core import (
 )
 from llama_index.llms.openai import OpenAI
 from llama_index.llms.anthropic import Anthropic
+from llama_index.llms.groq import Groq
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 
 logger = logging.getLogger(__name__)
@@ -34,10 +35,10 @@ class ForumRAG:
 
     EMBEDDING_MODEL = "aari1995/German_Semantic_STS_V2"
     INDEX_NAME = "BabyForum"
-    MAX_TOKENS = 4096
+    MAX_TOKENS = 4000
     RETRIEVED_RESULTS = 20
     SIMILARITY_THRESHOLD = 0.75
-    PROMPT_TEMPLATE = """Du bist ein hilfreicher deutscher Assistent für junge Eltern, der Informationen aus Foren sammelt, um Eltern bei der Beantwortung von Fragen über ihre Kinder zu helfen.
+    PROMPT_TEMPLATE = """Du bist ein hilfreicher deutscher Assistent für junge Eltern, der Informationen aus Foren sammelt, um Eltern bei der Beantwortung von Fragen über ihre Kinder zu helfen. Du schreibst immer dein Model Name am Ende deiner Nachrichten.
 
             Verwende die folgenden Konversationen aus Elternforen, um den Nutzer über ein bestimmtes Thema zu helfen. Jede Zeile beginnt mit dem Namen des Benutzers, gefolgt von ":" und dann dem Kommentar, zum Beispiel so: "John: Bei mir ist es genauso."
             Verschiedene Konversationen können sich auf dasselbe Thema beziehen.
@@ -95,43 +96,55 @@ class ForumRAG:
             count += 1
 
     def get_llm(self):
-        anthropic_api_key = os.environ.get("ANTHROPIC_API_KEY")
-        openai_api_key = os.environ.get("OPENAI_API_KEY")
-        Settings.tokenizer = Anthropic().tokenizer
-        haiku = Anthropic(
-            model="claude-3-haiku-20240307",
-            api_key=anthropic_api_key,
-            max_tokens=self.MAX_TOKENS,
+        # anthropic_api_key = os.environ.get("ANTHROPIC_API_KEY")
+        # openai_api_key = os.environ.get("OPENAI_API_KEY")
+        groq_api_key = os.environ.get("GROQ_API_KEY")
+        # Settings.tokenizer = Anthropic().tokenizer
+        # haiku = Anthropic(
+        #     model="claude-3-haiku-20240307",
+        #     api_key=anthropic_api_key,
+        #     max_tokens=self.MAX_TOKENS,
+        # )
+        # sonnet = Anthropic(
+        #     model="claude-3-sonnet-20240229",
+        #     api_key=anthropic_api_key,
+        #     max_tokens=self.MAX_TOKENS,
+        # )
+        # opus = Anthropic(
+        #     model="claude-3-opus-20240229",
+        #     api_key=anthropic_api_key,
+        #     max_tokens=self.MAX_TOKENS,
+        # )
+        # gpt_35 = OpenAI(
+        #     model="gpt-3.5-turbo-0125",
+        #     api_key=openai_api_key,
+        #     max_tokens=self.MAX_TOKENS,
+        # )
+        # gpt_4_turbo = OpenAI(
+        #     model="gpt-4-turbo-2024-04-09",
+        #     api_key=openai_api_key,
+        #     max_tokens=self.MAX_TOKENS,
+        # )
+        # gpt_4 = OpenAI(
+        #     model="gpt-4",
+        #     api_key=openai_api_key,
+        #     max_tokens=self.MAX_TOKENS,
+        # )
+        llama3 = Groq(
+            model="llama3-70b-8192",
+            api_key=groq_api_key,
         )
-        sonnet = Anthropic(
-            model="claude-3-sonnet-20240229",
-            api_key=anthropic_api_key,
-            max_tokens=self.MAX_TOKENS,
+        mixtral = Groq(
+            model="mixtral-8x7b-32768",
+            api_key=groq_api_key,
         )
-        opus = Anthropic(
-            model="claude-3-opus-20240229",
-            api_key=anthropic_api_key,
-            max_tokens=self.MAX_TOKENS,
+        gemma = Groq(
+            model="gemma-7b-it",
+            api_key=groq_api_key,
         )
-        gpt_35 = OpenAI(
-            model="gpt-3.5-turbo-0125",
-            api_key=openai_api_key,
-            max_tokens=self.MAX_TOKENS,
-        )
-        gpt_4_turbo = OpenAI(
-            model="gpt-4-turbo-2024-04-09",
-            api_key=openai_api_key,
-            max_tokens=self.MAX_TOKENS,
-        )
-        gpt_4 = OpenAI(
-            model="gpt-4",
-            api_key=openai_api_key,
-            max_tokens=self.MAX_TOKENS,
-        )
-        return opus
+        return llama3
 
     def __init__(self):
-
         embedding_model = HuggingFaceEmbedding(model_name=self.EMBEDDING_MODEL)
         llm = self.get_llm()
         Settings.llm = llm
